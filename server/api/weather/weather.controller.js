@@ -14,11 +14,11 @@ var interval = setInterval(function(){
 }, tick)
 
 exports.now = function(req, res) {
-  //var user_ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  //console.log(req.headers);
-  //console.log(req.connection);
   var lat = req.params.lat;
   var lon = req.params.lon;
+  //Allowing Access-Control-Allow-Origin
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   function getWeather(lat,lon, cb){
     var weatherAPIOptions = {
       uri: 'http://api.wunderground.com/api/' + process.env.WUNDERGROUND_KEY + '/conditions/lang:VU/q/' + lat + "," + lon + ".json",
