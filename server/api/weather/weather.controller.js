@@ -8,7 +8,8 @@ var Weather = require('./weather.model');
 // Get weather now from Wunderground
 // Allow to run for every 2 minutes from 6AM to 6PM
 var tick = 120000; //2 minutes
-var currentConditions, canCheck = false;
+var currentConditions = {};
+var canCheck = false;
 var interval = setInterval(function(){
   canCheck = true;
 }, tick)
@@ -51,18 +52,18 @@ exports.now = function(req, res) {
 
     getWeather(lat, lon, function(err, data) {
       if (err) {return res.status(500).json({});}
-      currentConditions = data;
-      return res.status(200).json(currentConditions);
+      currentConditions[lat + ',' + lon] = data;
+      return res.status(200).json(currentConditions[lat + ',' + lon]);
     });
   };
 
-  if (canCheck || !currentConditions) {
+  if (canCheck || !currentConditions[lat + ',' + lon]) {
     weatherNow();
     canCheck = false;
     console.log('New data');
   } else {
     console.log('Old data');
-    return res.status(200).json(currentConditions);
+    return res.status(200).json(currentConditions[lat + ',' + lon]);
   }
 
 };
